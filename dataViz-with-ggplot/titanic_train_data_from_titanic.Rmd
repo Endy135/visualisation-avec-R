@@ -13,13 +13,43 @@ knitr::opts_chunk$set(echo = TRUE)
 library(titanic)
 ```
 
+#### Les aesthetics (aes)
+ce sont les proprietes du graphique permettant de projeter des caracterristiques des donnees, ils sont lies au type de graphique.
+ilsprennent en paramettre au moins un data frame, aes(x = , y = , color = ,....), type de graph...
+
 # donnees
 ```{r}
-titanic = data("titanic_train")
+data("titanic_train")
+df_titanic = titanic_train
 ```
 
+## Exploration de données
+```{r}
+dim(df_titanic)
+```
 
 ```{r}
-
+colSums(is.na(df_titanic))
 ```
 
+```{r}
+str(df_titanic)
+```
+
+```{r}
+summary(df_titanic)
+```
+
+
+##### diagrame de fare (prix du ticket)
+
+Nous avons trois possibilite pour le fait
+
+```{r}
+ggplot(data = df_titanic, aes(x = Fare, color = 'red')) +
+  geom_histogram()
+
+#ggplot(data = df) + geom_histogram (x = Fare)
+#ggplot() + geom_histogram (data = df ,aes(x = Fare))
+
+```

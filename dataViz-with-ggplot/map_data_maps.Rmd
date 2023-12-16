@@ -1,0 +1,91 @@
+---
+title: "carte regionale"
+output: html_document
+date: "2023-12-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Library
+```{r}
+library(faraway)
+library(dplyr)
+library(ggplot2)
+library(maps)
+library(viridis)
+library(leaflet)
+library(plotly)
+```
+
+
+#Données cartographique du state
+```{r}
+us_map = map_data("state")
+View(us_map)
+```
+
+##
+```{r}
+us_map %>% filter(region %in% c("north carolina", "south carolina"))%>%ggplot(aes(x = long, y=lat))+ geom_point()
+```
+
+# Donnees votes.repub du package *maps*
+```{r}
+data("votes.repub")
+df_votes.repub = votes.repub
+```
+
+##
+
+```{r}
+Table_with_vote = df_votes.repub %>% 
+  as_tibble() %>%
+  mutate(state = rownames(df_votes.repub), state = tolower(state))%>%
+  right_join(us_map, by = c("state" = "region"))
+
+```
+
+
+## 
+```{r}
+ggplot(Table_with_vote, aes(x = long, y = lat, group = group, fill = `1976`))+
+  geom_polygon(color = "black")+
+  theme_void()+
+  scale_fill_viridis(name = "Republican\nvotes (%)")
+```
+
+# Avec google map
+```{r}
+df_long_lati = data.frame("lieu" = c("IDsI", "LsY", "Basilique"), "long" = c(-5.23065, -5.24909, -5.28933), "lat" = c(6.88141, 6.82493, 6.82753))
+```
+
+```{r}
+View(df_long_lati)
+```
+
+```{r}
+#library(leaflet) pour appeler la carte
+
+leaflet() %>% 
+  addTiles() %>%
+  addMarkers(data = df_long_lati)
+
+```
+
+## 
+
+```{r}
+# library(Plotly)
+plot_ly(df2, type = "scatter", x = ~Time, y =~shots)
+```
+## 
+
+```{r}
+df2_scatter = df2 %>% 
+  ggplot(aes(x = Time, y = Shots, color = Position))+
+  geom_point()
+ggplotly(df2_scatter)
+```
+

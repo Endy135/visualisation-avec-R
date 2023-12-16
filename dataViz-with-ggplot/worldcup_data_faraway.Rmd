@@ -117,7 +117,7 @@ head(df3)
 ```{r}
 str(df3)
 ```
-
+## Valeur manquantes
 ```{r}
 colSums(is.na(df3))
 ```
@@ -145,3 +145,83 @@ ggplot(df3, aes(x = ht, y = wt, xlab = "height", ylab = "weight", color = sex)) 
 - Utiliser les bar horizontales <br>
 - Mettre en exegue un certain nombre d'information(joueur avec le plus de passes, de tirs...etc) <br>
 - 
+
+
+
+
+# barplot worldcup, vertical (A eviter)
+
+```{r}
+df2_pos = df2 %>% group_by(Position)
+```
+
+```{r}
+ggplot(df2_pos, aes(x = Position)) +
+  geom_bar()
+```
+
+
+## barplot worldcup horizontal (bonne pratique)
+
+```{r}
+ggplot(df2_pos, aes(y = Position)) +
+  geom_bar()
+```
+## Courbe de lissage
+```{r}
+ggplot(df2, aes(x = Passes, y = Shots)) +
+  geom_point()+
+  geom_smooth()
+```
+
+
+##
+```{r}
+ggplot(df2, aes(x = Passes, y = Shots)) +
+  geom_point()+
+  geom_vline(xintercept = 50, linetype = "dashed", color = "red") +
+  labs(x = "Passes", y = "Shots")
+```
+
+## 
+```{r}
+
+ggplot(df2, aes(x = Time, y = Shots, xlab = "Time", ylab = "Shots", color = Position)) +
+  geom_point() +
+  labs(x = "Time", y = "Shots")
+```
+
+## courbe selon la position
+
+```{r}
+ggplot(df2, aes(x = Time, y = Shots ))+
+  geom_point()+
+  facet_wrap(~Position)
+```
+
+
+## par temp de jeu et par equipe et lier par equipe le plu petit tp de jeu et le temp de jeu moyen(rouge)
+
+```{r}
+df2_trié <- df2 %>% group_by(Team) %>% summarise(moy_time = mean(Time)) %>% arrange(moy_time) %>% mutate(Team = factor(Team, levels = Team))
+```
+
+```{r}
+head(df2_trié)
+```
+
+
+```{r}
+ggplot()+
+  geom_point(data= df2_trié, aes(x = moy_time, y = Team, color = "red"))+
+  geom_point(data = df2, aes(x = Time, y = Team), alpha = 0.5)+
+  geom_line(data = df2, aes(x = Time, y = Team))
+ 
+  
+```
+
+
+```{r}
+head(df2)
+```
+
