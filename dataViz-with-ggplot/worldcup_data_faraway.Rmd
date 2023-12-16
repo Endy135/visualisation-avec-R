@@ -1,0 +1,147 @@
+---
+title: "donnee_worldcup_de_faraway"
+output: html_document
+date: "2023-12-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(faraway)
+library(dplyr)
+library(ggplot2)
+```
+
+
+```{r}
+data("worldcup")
+df2 = worldcup
+```
+
+# Exploration de données **worldcup**
+
+```{r}
+dim(df2)
+```
+
+```{r}
+head(df2)
+```
+
+
+```{r}
+str(df2)
+```
+
+```{r}
+summary(df2)
+```
+
+```{r}
+# case1
+#ggplot(df2, aes(x = time, y = Passes)) +
+ # geom_point()
+
+# case2
+
+ggplot(df2, aes(x = Time, y = Passes, color = Position, size = Shots)) + geom_point()
+
+# case3
+#ggplot(df2, aes()) +
+ # geom_point()
+
+```
+
+
+# 2
+```{r}
+noteworthy_player = worldcup %>% filter (Shots == max(Shots) | Passes == max(Passes)) %>%
+  mutate(point_label = paste(Team, Position, sep = ","))
+
+#1
+
+ggplot(worldcup, aes(x = Passes, y = Shots))+
+  
+#2
+  
+geom_point() + geom_text(data = noteworthy_player, aes(label = point_label))
+```
+
+# dataframe 
+```{r}
+df_int1 = df2  %>% filter(Passes == max(Passes))
+df_int2 = df2  %>% filter(Shots == max(Shots)) 
+
+#Un dataframe avec le deux precedents
+df_int = rbind(df_int1, df_int2)
+
+```
+
+
+```{r}
+head(df_int)
+```
+
+## Visual
+
+```{r}
+ggplot(df2, aes(x = Time, y = Passes, color = Position, size = Shots)) +
+  geom_point() +
+  geom_text(data = df_int, aes(label = paste(Team, rownames(df_int))), vjust = -0.5, color = c('blue', 'cyan'))
+
+
+
+
+```
+
+## gestion des aesthetic
+```{r}
+ggplot(df2, aes(x = Time, y =Passes)) +
+  geom_point(color = "darkgreen")
+
+```
+# Dataframe *nepali*
+```{r}
+data("nepali")
+df3 = nepali
+```
+
+## Exploration des données
+
+```{r}
+head(df3)
+```
+
+```{r}
+str(df3)
+```
+
+```{r}
+colSums(is.na(df3))
+```
+```{r}
+df3$sex = as.factor(df3$sex)
+```
+
+## scatterplot
+
+```{r}
+
+ggplot(df3, aes(x = ht, y = wt, xlab = "ht", ylab = "wt")) +
+  geom_point()
+```
+
+## scatterplot avec titre, label
+```{r}
+ggplot(df3, aes(x = ht, y = wt, xlab = "height", ylab = "weight", color = sex)) +
+  geom_point() +
+  labs(x = "height(ht)", y = "weight(wt)", title = "Taille des enfants en fonction de leur poids")
+```
+
+- Garder les graphique les moins surchargés possibles en terme de nombre de pixel <br>
+- Utiliser les labels explicites <br>
+- Utiliser les bar horizontales <br>
+- Mettre en exegue un certain nombre d'information(joueur avec le plus de passes, de tirs...etc) <br>
+- 

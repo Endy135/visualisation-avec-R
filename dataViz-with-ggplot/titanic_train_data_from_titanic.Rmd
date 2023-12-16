@@ -1,0 +1,25 @@
+---
+title: "titanic"
+output: html_document
+date: "2023-12-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Library
+```{r}
+library(titanic)
+```
+
+# donnees
+```{r}
+titanic = data("titanic_train")
+```
+
+
+```{r}
+
+```
+
